@@ -23,6 +23,7 @@ mknod -m 666 /dev/holstein c `grep holstein /proc/devices | awk '{print $1;}'` 0
 ##
 echo -e "\nBoot took $(cut -d' ' -f1 /proc/uptime) seconds\n"
 echo "[ Holstein v1 (LK01) - Pawnyable ]"
+# setsid cttyhack setuidgid 0 sh
 setsid cttyhack setuidgid 1337 sh
 
 ##

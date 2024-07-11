@@ -10,7 +10,7 @@ qemu-system-x86_64 \
     -kernel bzImage \
     -append "console=ttyS0 loglevel=3 oops=panic panic=-1 nopti nokaslr" \
     -no-reboot \
-    -cpu qemu64 \
+    -cpu kvm64,+smep \
     -gdb tcp::12345 \
     -smp 1 \
     -monitor /dev/null \
