@@ -1,5 +1,5 @@
 #!/bin/sh
-musl-gcc exploit.c -o exploit -static
+musl-gcc kpti_trampoline_exploit.c -o exploit -static
 mv exploit root
 cd root; find . -print0 | cpio -o --null --owner=root --format=newc > ../debugfs.cpio
 cd ../
